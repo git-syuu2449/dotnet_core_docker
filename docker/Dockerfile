@@ -1,0 +1,32 @@
+# マルチステージビルド
+
+# ベースイメージ
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY . .
+WORKDIR /src/app
+RUN dotnet publish -c Release -o /app
+
+FROM base AS final
+
+# UID/GIDを引数で受け取る（デフォルト3000）
+ARG U_ID=3000
+ARG G_ID=3000
+ARG USERNAME=app_user
+ARG GROUPNAME=app_group
+
+WORKDIR /app
+COPY --from=build /app .
+
+# ユーザー作成 + sudo権限付与　存在チェック
+RUN getent group ${GROUPNAME} || groupadd -g ${G_ID} ${GROUPNAME} \
+ && id -u ${USERNAME} >/dev/null 2>&1 || useradd -u ${U_ID} -g ${GROUPNAME} -m ${USERNAME}
+
+# 実行ユーザー切替
+USER ${USERNAME}
+
+ENTRYPOINT ["dotnet", "app.dll"]
