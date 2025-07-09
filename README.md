@@ -48,8 +48,8 @@ https://learn.microsoft.com/ja-jp/dotnet/core/tools/dotnet-new
 ```
 
 # --- UID/GID ---
-U_ID=3000
-G_ID=3000
+U_ID=1000
+G_ID=1000
 
 # --- ENVIRONMENT ---
 ASPNETCORE_ENVIRONMENT=Development
@@ -58,9 +58,11 @@ ASPNETCORE_ENVIRONMENT=Development
 SQL_SERVER_ROOT_PASSWORD=password
 SQL_SERVER_DATABASE=sql_server_db
 
+APP_USER=c_user
+
 # --- PORT設定 ---
 APP_PORT=5050
-SQL_SERVER_PORT=3306
+SQL_SERVER_PORT=1433
 NGINX_PORT=6060
 
 

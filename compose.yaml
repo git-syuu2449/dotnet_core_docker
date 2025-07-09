@@ -1,17 +1,21 @@
 services:
   web:
-    container_name: app
+    image: mcr.microsoft.com/dotnet/sdk:8.0
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/web/Dockerfile.dev
       args:
         UID: ${U_ID}
         GID: ${G_ID}
     user: "${U_ID}:${G_ID}" 
     ports:
       - "${APP_PORT}:5000"
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: ["dotnet", "watch", "run"]
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
     depends_on:
       - db
 
@@ -27,8 +31,11 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      SA_PASSWORD: "${SQL_SERVER_ROOT_PASSWORD}"
-      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${SQL_SERVER_ROOT_PASSWORD}"
+      ACCEPT_EULA: "Y" # 承認する
+      MSSQL_PID: Express # エディションの指定
+      MSSQL_LCID: 1041 # ロケールのID（日本語） ログ等も含め日本語になるので好みで
+      MSSQL_COLLATION: Japanese_CI_AS # 照合順序
     ports:
       - "${SQL_SERVER_PORT}:1433"
     volumes:
