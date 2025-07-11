@@ -14,8 +14,8 @@ RUN dotnet publish -c Release -o /app
 FROM base AS final
 
 # UID/GIDを引数で受け取る（デフォルト3000）
-ARG U_ID=3000
-ARG G_ID=3000
+ARG U_ID=1000
+ARG G_ID=1000
 ARG USERNAME=app_user
 ARG GROUPNAME=app_group
 
