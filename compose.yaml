@@ -10,6 +10,8 @@ services:
     user: "${U_ID}:${G_ID}" 
     ports:
       - "${APP_PORT}:5000"
+      - ${VITE_PORT}:5173 # vite dev
+      - ${VITE_TEST_PORT}:3037 # vite test
     volumes:
       - ./app:/app
     working_dir: /app

@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Sample Page";
+}
+
+@section Styles {
+    <link rel="stylesheet" vite-href="~/frontend/css/sample/index.css" />
+}
+
+@section Scripts {
+    <script type="module" vite-src="frontend/js/sample/index.ts"></script>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Sample</h1>
+</div>
+
+
+
+<div id="app-vue">
+    <sample-area
+      :get-url="'test'"
+    ></sample-area>
+</div>

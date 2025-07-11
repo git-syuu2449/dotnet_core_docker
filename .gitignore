@@ -410,3 +410,6 @@ FodyWeavers.xsd
 
 # dotenv files
 .env
+
+# assets
+app/wwwroot/assets/**/*/

@@ -5,6 +5,24 @@ ARG G_ID=1000
 ARG USERNAME=app_user
 ARG GROUPNAME=app_group
 
+USER root
+
+# 必要パッケージのインストール
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    curl \
+    libzip-dev \
+    mariadb-client \
+    zlib1g-dev \
+    sudo \
+    gnupg
+
+
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm vite vue
+
 # ユーザー作成 + sudo権限付与　存在チェック
 RUN getent group ${GROUPNAME} || groupadd -g ${G_ID} ${GROUPNAME} \
  && id -u ${USERNAME} >/dev/null 2>&1 || useradd -u ${U_ID} -g ${GROUPNAME} -m ${USERNAME}
