@@ -1,4 +1,6 @@
 using Vite.AspNetCore;
+using Microsoft.EntityFrameworkCore;
+using app.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 // add vite
@@ -6,6 +8,12 @@ builder.Services.AddViteServices();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// EF DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Cors
 builder.Services.AddCors(options =>
@@ -42,10 +50,23 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// CORS
+app.UseCors("DevCorsPolicy");
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Attribute routed APIs
+app.MapControllers();
+
+// Apply pending EF Core migrations at startup (requires DB reachable)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

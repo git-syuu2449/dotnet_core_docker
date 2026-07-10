@@ -413,3 +413,6 @@ FodyWeavers.xsd
 
 # assets
 app/wwwroot/assets/**/*/
+
+# bash history
+.bash_history

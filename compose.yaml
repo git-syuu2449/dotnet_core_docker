@@ -15,9 +15,14 @@ services:
     volumes:
       - ./app:/app
     working_dir: /app
-    command: ["dotnet", "watch", "run"]
+    command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      # Bind the app to all network interfaces on port 5000 (HTTP only)
+      ASPNETCORE_URLS: "http://+:5000"
+      # Persist interactive shell history to a file inside the mounted /app folder
+      # This keeps command history (from `docker compose exec web bash`) on the host.
+      HISTFILE: /app/.bash_history
     depends_on:
       - db
 
@@ -36,7 +41,7 @@ services:
       MSSQL_SA_PASSWORD: "${SQL_SERVER_ROOT_PASSWORD}"
       ACCEPT_EULA: "Y" # 承認する
       MSSQL_PID: Express # エディションの指定
-      MSSQL_LCID: 1041 # ロケールのID（日本語） ログ等も含め日本語になるので好みで
+      MSSQL_LCID: 1041 # ロケールID（日本語）
       MSSQL_COLLATION: Japanese_CI_AS # 照合順序
     ports:
       - "${SQL_SERVER_PORT}:1433"
